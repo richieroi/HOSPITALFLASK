@@ -515,6 +515,134 @@ def users():
     conn.close()
     return render_template('users.html', users=users)
 
+@app.route('/add_user', methods=['GET', 'POST'])
+@login_required(role='Admin')
+def add_user():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        role = request.form['role']
+        person_id = request.form['person_id']
+        
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO Users186 (Username, Password, Role, PersonID)
+                VALUES (?, ?, ?, ?)
+            """, (username, password, role, person_id))
+            conn.commit()
+            flash('User added successfully!', 'success')
+            return redirect(url_for('users'))
+        except Exception as e:
+            flash(f'Error: {str(e)}', 'danger')
+        finally:
+            cursor.close()
+            conn.close()
+    return render_template('add_user.html')
+
+@app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
+@login_required(role='Admin')
+def edit_user(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Users186 WHERE UserID = ?", (user_id,))
+    user = cursor.fetchone()
+    
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        role = request.form['role']
+        person_id = request.form['person_id']
+        
+        try:
+            cursor.execute("""
+                UPDATE Users186
+                SET Username = ?, Password = ?, Role = ?, PersonID = ?
+                WHERE UserID = ?
+            """, (username, password, role, person_id, user_id))
+            conn.commit()
+            flash('User updated successfully!', 'success')
+            return redirect(url_for('users'))
+        except Exception as e:
+            flash(f'Error: {str(e)}', 'danger')
+        finally:
+            cursor.close()
+            conn.close()
+    
+    cursor.close()
+    conn.close()
+    return render_template('edit_user.html', user=user)
+
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+@login_required(role='Admin')
+def delete_user(user_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM Users186 WHERE UserID = ?", (user_id,))
+        conn.commit()
+        flash('User deleted successfully!', 'success')
+    except Exception as e:
+        flash(f'Error: {str(e)}', 'danger')
+    finally:
+        cursor.close()
+        conn.close()
+    return redirect(url_for('users'))
+
+@app.route('/add_medication', methods=['GET', 'POST'])
+@login_required(role='Admin')
+def add_medication():
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        dosage_form = request.form['dosage_form']
+        manufacturer = request.form['manufacturer']
+        unit_price = request.form['unit_price']
+        stock_quantity = request.form['stock_quantity']
+        
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO Medications186 (Name, Description, DosageForm, Manufacturer, UnitPrice, StockQuantity)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (name, description, dosage_form, manufacturer, unit_price, stock_quantity))
+            conn.commit()
+            flash('Medication added successfully!', 'success')
+            return redirect(url_for('medications'))
+        except Exception as e:
+            flash(f'Error: {str(e)}', 'danger')
+        finally:
+            cursor.close()
+            conn.close()
+    return render_template('add_medication.html')
+
+@app.route('/add_doctor', methods=['GET', 'POST'])
+@login_required(role='Admin')
+def add_doctor():
+    if request.method == 'POST':
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        specialization = request.form['specialization']
+        
+        try:
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("""
+                INSERT INTO Doctors186 (FirstName, LastName, Specialization)
+                VALUES (?, ?, ?)
+            """, (first_name, last_name, specialization))
+            conn.commit()
+            flash('Doctor added successfully!', 'success')
+            return redirect(url_for('doctors'))
+        except Exception as e:
+            flash(f'Error: {str(e)}', 'danger')
+        finally:
+            cursor.close()
+            conn.close()
+    return render_template('add_doctor.html')
+
 @app.route('/audit_logs')
 @login_required(role='Admin')
 def audit_logs():

@@ -131,6 +131,45 @@
                         </div>
                     {% endif %}
                 </div>
+                
+                <!-- Add links to new routes -->
+                {% if session.role == 'Admin' %}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Manage Users</h5>
+                            </div>
+                            <div class="card-body">
+                                <a href="{{ url_for('add_user') }}" class="btn btn-primary">Add User</a>
+                                <a href="{{ url_for('users') }}" class="btn btn-secondary">View Users</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Manage Medications</h5>
+                            </div>
+                            <div class="card-body">
+                                <a href="{{ url_for('add_medication') }}" class="btn btn-primary">Add Medication</a>
+                                <a href="{{ url_for('medications') }}" class="btn btn-secondary">View Medications</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">Manage Doctors</h5>
+                            </div>
+                            <div class="card-body">
+                                <a href="{{ url_for('add_doctor') }}" class="btn btn-primary">Add Doctor</a>
+                                <a href="{{ url_for('doctors') }}" class="btn btn-secondary">View Doctors</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </main>
         </div>
     </div>
