@@ -1,0 +1,77 @@
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+    <div class="sidebar-sticky pt-3">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('dashboard') }}">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+            </li>
+            
+            {% if session.role in ['Admin', 'Doctor'] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('patients') }}">
+                        <i class="fas fa-user-injured"></i> Patients
+                    </a>
+                </li>
+            {% endif %}
+            
+            {% if session.role in ['Admin', 'Doctor', 'Nurse', 'Patient'] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('appointments') }}">
+                        <i class="fas fa-calendar-alt"></i> Appointments
+                    </a>
+                </li>
+            {% endif %}
+            
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('doctors') }}">
+                    <i class="fas fa-user-md"></i> Doctors
+                </a>
+            </li>
+            
+            {% if session.role in ['Admin', 'Doctor'] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('medications') }}">
+                        <i class="fas fa-pills"></i> Medications
+                    </a>
+                </li>
+            {% endif %}
+            
+            {% if session.role == 'Admin' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('users') }}">
+                        <i class="fas fa-users-cog"></i> Users
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('audit_logs') }}">
+                        <i class="fas fa-history"></i> Audit Logs
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+        
+        {% if session.role == 'Doctor' %}
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>Quick Actions</span>
+            </h6>
+            <ul class="nav flex-column mb-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('add_patient') }}">
+                        <i class="fas fa-user-plus"></i> Add New Patient
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('schedule_appointment') }}">
+                        <i class="fas fa-calendar-plus"></i> Schedule Appointment
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('add_medical_record') }}">
+                        <i class="fas fa-notes-medical"></i> Add Medical Record
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
+    </div>
+</nav>

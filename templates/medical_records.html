@@ -1,0 +1,331 @@
+<!-- filepath: c:\Users\donko\Music\HOSPITALFLASK\templates\enhanced_medical_records.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Medical Records - Hospital Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/medical-theme.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    {% include 'includes/navbar.html' %}
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            {% include 'includes/sidebar.html' %}
+            
+            <!-- Main Content -->
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <div>
+                        <h1 class="h2">Patient Medical Records</h1>
+                        <nav aria-label="breadcrumb" class="no-print">
+                            <ol class="breadcrumb bg-transparent p-0">
+                                <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url_for('patients') }}">Patients</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">{{ patient.FirstName }} {{ patient.LastName }}</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="btn-toolbar mb-2 mb-md-0 no-print">
+                        <div class="btn-group mr-2">
+                            <button type="button" class="btn btn-sm btn-outline-primary print-record-btn">
+                                <i class="fas fa-print"></i> Print Records
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary export-record-btn">
+                                <i class="fas fa-file-export"></i> Export as PDF
+                            </button>
+                        </div>
+                        <a href="{{ url_for('add_medical_record') }}?patient_id={{ patient.PatientID }}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i> Add Record
+                        </a>
+                    </div>
+                </div>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show no-print">
+                                {{ message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <!-- Patient Profile Card -->
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="card mb-4">
+                            <div class="medical-record-header">
+                                <div class="d-flex align-items-center">
+                                    <span class="medical-icon">
+                                        <i class="fas fa-user"></i>
+                                    </span>
+                                    <div>
+                                        <h4 class="mb-0">{{ patient.FirstName }} {{ patient.LastName }}</h4>
+                                        <small>Patient ID: {{ patient.PatientID }} | Age: {{ age }} years</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-4 text-muted">Date of Birth:</div>
+                                    <div class="col-md-8">{{ patient.DateOfBirth.strftime('%B %d, %Y') }}</div>
+                                </div>
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-4 text-muted">Gender:</div>
+                                    <div class="col-md-8">
+                                        {% if patient.Gender == 'M' %}Male
+                                        {% elif patient.Gender == 'F' %}Female
+                                        {% else %}Other{% endif %}
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-4 text-muted">Contact:</div>
+                                    <div class="col-md-8">
+                                        <div><i class="fas fa-phone-alt text-muted mr-2"></i> {{ patient.PhoneNumber }}</div>
+                                        <div><i class="fas fa-envelope text-muted mr-2"></i> {{ patient.Email }}</div>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-4 text-muted">Address:</div>
+                                    <div class="col-md-8">{{ patient.Address }}</div>
+                                </div>
+                                <div class="row align-items-center mb-3">
+                                    <div class="col-md-4 text-muted">Insurance:</div>
+                                    <div class="col-md-8">{{ patient.InsuranceDetails }}</div>
+                                </div>
+                                <div class="row align-items-center">
+                                    <div class="col-md-4 text-muted">Emergency Contact:</div>
+                                    <div class="col-md-8">{{ patient.EmergencyContact }}</div>
+                                </div>
+                                
+                                <hr class="my-4">
+                                
+                                <div class="row">
+                                    <div class="col-3 text-center">
+                                        <button type="button" class="btn btn-light border p-2 w-100 h-100">
+                                            <i class="fas fa-file-medical fa-lg text-primary"></i>
+                                            <div class="small mt-1">Records</div>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <button type="button" class="btn btn-light border p-2 w-100 h-100">
+                                            <i class="fas fa-capsules fa-lg text-success"></i>
+                                            <div class="small mt-1">Medications</div>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <button type="button" class="btn btn-light border p-2 w-100 h-100">
+                                            <i class="fas fa-calendar-alt fa-lg text-info"></i>
+                                            <div class="small mt-1">Appointments</div>
+                                        </button>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        <button type="button" class="btn btn-light border p-2 w-100 h-100">
+                                            <i class="fas fa-heartbeat fa-lg text-danger"></i>
+                                            <div class="small mt-1">Vitals</div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Vital Signs -->
+                        <div class="card mb-4 vitals-card">
+                            <div class="card-header bg-white border-bottom-0">
+                                <h5 class="mb-0"><i class="fas fa-heartbeat text-danger mr-2"></i> Vital Signs</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="vital-reading vital-bp">
+                                            <p class="vital-value mb-0">120/80</p>
+                                            <p class="vital-label">Blood Pressure</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="vital-reading vital-hr">
+                                            <p class="vital-value mb-0">72 bpm</p>
+                                            <p class="vital-label">Heart Rate</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="vital-reading vital-temp">
+                                            <p class="vital-value mb-0">98.6°F</p>
+                                            <p class="vital-label">Temperature</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="vital-reading vital-spo2">
+                                            <p class="vital-value mb-0">98%</p>
+                                            <p class="vital-label">SpO2</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <canvas id="vitals-chart" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Medical Records Timeline -->
+                    <div class="col-md-7">
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0"><i class="fas fa-notes-medical mr-2"></i> Medical History</h5>
+                                <div class="no-print">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="search-addon"><i class="fas fa-search"></i></span>
+                                        </div>
+                                        <input type="text" class="form-control" id="record-search" placeholder="Search records..." aria-label="Search records" aria-describedby="search-addon">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="btn-group btn-group-sm no-print mb-3" role="group">
+                                    <button type="button" class="btn btn-outline-primary active record-filter-btn" data-filter="all">All</button>
+                                    <button type="button" class="btn btn-outline-primary record-filter-btn" data-filter="diagnosis">Diagnoses</button>
+                                    <button type="button" class="btn btn-outline-primary record-filter-btn" data-filter="medication">Medications</button>
+                                    <button type="button" class="btn btn-outline-primary record-filter-btn" data-filter="procedure">Procedures</button>
+                                </div>
+                                
+                                <div id="no-records-message" class="alert alert-info" style="display: none;">
+                                    No records match your search criteria.
+                                </div>
+                                
+                                <div class="medical-timeline" id="patient-timeline">
+                                    {% for record in records %}
+                                        <div class="timeline-item medical-record-item" data-category="diagnosis" data-date="{{ record.RecordDate }}" data-type="diagnosis" id="record-detail-{{ record.RecordID }}">
+                                            <div class="timeline-icon">
+                                                <i class="fas"></i>
+                                            </div>
+                                            <div class="card">
+                                                <div class="card-header bg-light">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div class="timeline-title">
+                                                            <strong>{{ record.Diagnosis }}</strong> 
+                                                            <span class="badge badge-pill badge-primary ml-2">Diagnosis</span>
+                                                        </div>
+                                                        <small>{{ record.RecordDate.strftime('%B %d, %Y') }}</small>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="timeline-description">
+                                                        <p><strong>Doctor:</strong> {{ record.DoctorName }}</p>
+                                                        <p><strong>Treatment:</strong> {{ record.Treatment }}</p>
+                                                        {% if record.Notes %}
+                                                            <p><strong>Notes:</strong> {{ record.Notes }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="mt-3 no-print">
+                                                        <div class="btn-group btn-group-sm">
+                                                            <a href="{{ url_for('add_prescription') }}?record_id={{ record.RecordID }}" class="btn btn-outline-primary">
+                                                                <i class="fas fa-prescription-bottle-alt"></i> Add Prescription
+                                                            </a>
+                                                            <button class="btn btn-outline-secondary print-record-btn" data-record-id="{{ record.RecordID }}">
+                                                                <i class="fas fa-print"></i> Print
+                                                            </button>
+                                                            <button class="btn btn-outline-info export-record-btn" data-record-id="{{ record.RecordID }}">
+                                                                <i class="fas fa-file-export"></i> Export
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    
+                                    <!-- Medication timeline item example -->
+                                    <div class="timeline-item medical-record-item" data-category="medication" data-date="2023-01-05" data-type="medication">
+                                        <div class="timeline-icon">
+                                            <i class="fas"></i>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header bg-light">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="timeline-title">
+                                                        <strong>Lisinopril 10mg</strong>
+                                                        <span class="badge badge-pill badge-success ml-2">Medication</span>
+                                                    </div>
+                                                    <small>January 05, 2023</small>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="timeline-description">
+                                                    <p><strong>Doctor:</strong> Dr. Robert Johnson</p>
+                                                    <p><strong>Dosage:</strong> 10mg</p>
+                                                    <p><strong>Frequency:</strong> Once daily</p>
+                                                    <p><strong>Duration:</strong> January 05, 2023 - July 05, 2023</p>
+                                                    <p><strong>Instructions:</strong> Take in the morning</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Procedure timeline item example -->
+                                    <div class="timeline-item medical-record-item" data-category="procedure" data-date="2023-02-15" data-type="procedure">
+                                        <div class="timeline-icon">
+                                            <i class="fas"></i>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-header bg-light">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div class="timeline-title">
+                                                        <strong>Blood Test</strong>
+                                                        <span class="badge badge-pill badge-info ml-2">Procedure</span>
+                                                    </div>
+                                                    <small>February 15, 2023</small>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="timeline-description">
+                                                    <p><strong>Doctor:</strong> Dr. William Smith</p>
+                                                    <p><strong>Type:</strong> Complete Blood Count (CBC)</p>
+                                                    <p><strong>Results:</strong> Within normal ranges</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Prescriptions Section -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-prescription-bottle-alt mr-2"></i> Active Prescriptions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="prescription-item">
+                                    <h5>Lisinopril 10mg</h5>
+                                    <div class="row">
+                                        <div class="col-md-4 text-muted">Prescribed by:</div>
+                                        <div class="col-md-8">Dr. Robert Johnson</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-muted">Frequency:</div>
+                                        <div class="col-md-8">Once daily</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 text-muted">Duration:</div>
+                                        <div class="col-md-8">Jan 05, 2023 - Jul 05, 2023</div>
+                                    

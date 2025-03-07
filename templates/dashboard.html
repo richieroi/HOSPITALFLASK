@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Hospital Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    {% include 'includes/navbar.html' %}
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            {% include 'includes/sidebar.html' %}
+            
+            <!-- Main Content -->
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard</h1>
+                </div>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <h2>Welcome, {{ session.username }}!</h2>
+                <p>You are logged in as: {{ session.role }}</p>
+                
+                <div class="row mt-4">
+                    <!-- Display different dashboard options based on user role -->
+                    {% if session.role == 'Admin' %}
+                        <div class="col-md-4">
+                            <div class="card bg-primary text-white mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-users"></i> Manage Users</h5>
+                                    <p class="card-text">View and manage system users, roles and permissions.</p>
+                                    <a href="{{ url_for('users') }}" class="btn btn-light">Manage Users</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-success text-white mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-history"></i> Audit Logs</h5>
+                                    <p class="card-text">View system audit logs and activity history.</p>
+                                    <a href="{{ url_for('audit_logs') }}" class="btn btn-light">View Logs</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-info text-white mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-database"></i> Database Management</h5>
+                                    <p class="card-text">Backup and restore system database.</p>
+                                    <form action="{{ url_for('backup_database') }}" method="post">
+                                        <button type="submit" class="btn btn-light">Backup Database</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    {% if session.role == 'Doctor' or session.role == 'Admin' %}
+                        <div class="col-md-4">
+                            <div class="card bg-warning text-white mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-user-injured"></i> Patients</h5>
+                                    <p class="card-text">View and manage patient information.</p>
+                                    <a href="{{ url_for('patients') }}" class="btn btn-light">View Patients</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-danger text-white mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-calendar-alt"></i> Appointments</h5>
+                                    <p class="card-text">Manage patient appointments.</p>
+                                    <a href="{{ url_for('appointments') }}" class="btn btn-light">View Appointments</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-secondary text-white mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-pills"></i> Medications</h5>
+                                    <p class="card-text">View available medications and inventory.</p>
+                                    <a href="{{ url_for('medications') }}" class="btn btn-light">View Medications</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    {% if session.role == 'Patient' %}
+                        <div class="col-md-6">
+                            <div class="card bg-info text-white mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-calendar-alt"></i> My Appointments</h5>
+                                    <p class="card-text">View your upcoming and past appointments.</p>
+                                    <a href="{{ url_for('appointments') }}" class="btn btn-light">View Appointments</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-success text-white mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-user-md"></i> Our Doctors</h5>
+                                    <p class="card-text">View information about hospital doctors.</p>
+                                    <a href="{{ url_for('doctors') }}" class="btn btn-light">View Doctors</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    {% if session.role == 'Guest' %}
+                        <div class="col-md-12">
+                            <div class="card bg-info text-white mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fas fa-user-md"></i> Our Doctors</h5>
+                                    <p class="card-text">View information about hospital doctors.</p>
+                                    <a href="{{ url_for('doctors') }}" class="btn btn-light">View Doctors</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details - Hospital Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    {% include 'includes/navbar.html' %}
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            {% include 'includes/sidebar.html' %}
+            
+            <!-- Main Content -->
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Patient Details</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <a href="{{ url_for('patients') }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Patients
+                        </a>
+                    </div>
+                </div>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">{{ patient.FirstName }} {{ patient.LastName }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Patient ID:</strong> {{ patient.PatientID }}</p>
+                                <p><strong>Gender:</strong> {{ patient.Gender }}</p>
+                                <p><strong>Date of Birth:</strong> 
+                                    {% if patient.DateOfBirth is string %}
+                                        {{ patient.DateOfBirth }}
+                                    {% else %}
+                                        {{ patient.DateOfBirth.strftime('%Y-%m-%d') }}
+                                    {% endif %}
+                                </p>                                <p><strong>Age:</strong> {{ age }} years</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Address:</strong> {{ patient.Address }}</p>
+                                <p><strong>Phone:</strong> {{ patient.PhoneNumber }}</p>
+                                <p><strong>Email:</strong> {{ patient.Email }}</p>
+                                <p><strong>Insurance Details:</strong> {{ patient.InsuranceDetails }}</p>
+                                <p><strong>Emergency Contact:</strong> {{ patient.EmergencyContact }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Medical Records</h5>
+                                <a href="{{ url_for('medical_records', patient_id=patient.PatientID) }}" class="btn btn-sm btn-light">
+                                    <i class="fas fa-external-link-alt"></i> View All
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                {% if medical_records %}
+                                    <div class="list-group">
+                                        {% for record in medical_records[:3] %}
+                                            <div class="list-group-item">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h5 class="mb-1">{{ record.Diagnosis }}</h5>
+                                                    <small>{{ record.RecordDate.strftime('%Y-%m-%d') }}</small>
+                                                </div>
+                                                <p class="mb-1"><strong>Doctor:</strong> {{ record.DoctorName }}</p>
+                                                <p class="mb-1"><strong>Treatment:</strong> {{ record.Treatment }}</p>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% if medical_records|length > 3 %}
+                                        <div class="text-center mt-3">
+                                            <a href="{{ url_for('medical_records', patient_id=patient.PatientID) }}" class="btn btn-outline-info">
+                                                View {{ medical_records|length - 3 }} More Records
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <p class="text-muted">No medical records found.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Appointments</h5>
+                                <a href="{{ url_for('schedule_appointment') }}" class="btn btn-sm btn-light">
+                                    <i class="fas fa-calendar-plus"></i> Schedule New
+                                </a>
+                            </div>
+                            <div class="card-body">
+                                {% if appointments %}
+                                    <div class="list-group">
+                                        {% for appointment in appointments %}
+                                            <div class="list-group-item">
+                                                <div class="d-flex w-100 justify-content-between">
+                                                    <h5 class="mb-1">{{ appointment.Reason }}</h5>
+                                                    <span class="badge 
+                                                        {% if appointment.Status == 'Scheduled' %}badge-primary
+                                                        {% elif appointment.Status == 'Completed' %}badge-success
+                                                        {% elif appointment.Status == 'Cancelled' %}badge-danger
+                                                        {% else %}badge-warning{% endif %}">
+                                                        {{ appointment.Status }}
+                                                    </span>
+                                                </div>
+                                                <p class="mb-1"><strong>Doctor:</strong> {{ appointment.DoctorName }}</p>
+                                                <p class="mb-1"><strong>Date/Time:</strong> {{ appointment.AppointmentDate.strftime('%Y-%m-%d %H:%M') }}</p>
+                                                {% if appointment.Notes %}
+                                                    <p class="mb-1"><strong>Notes:</strong> {{ appointment.Notes }}</p>
+                                                {% endif %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted">No appointments found.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

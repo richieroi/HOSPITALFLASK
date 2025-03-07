@@ -1,0 +1,423 @@
+/**
+ * Medical Theme CSS
+ * Enhanced styling for Hospital Management System
+ */
+
+/* Color Variables */
+:root {
+    --primary-blue: #0072b5;        /* Medical blue */
+    --secondary-blue: #5cb8ff;      /* Lighter blue */
+    --accent-teal: #00a896;         /* Teal accent */
+    --medical-green: #43a047;       /* Medical green */
+    --alert-red: #d9534f;           /* Alert red */
+    --neutral-gray: #f8f9fa;        /* Background gray */
+    --dark-text: #2c3e50;           /* Dark text color */
+    --light-text: #ecf0f1;          /* Light text color */
+}
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--dark-text);
+    background-color: var(--neutral-gray);
+}
+
+/* Medical Header Styling */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.navbar-brand::before {
+    content: "\f0f8"; /* Font Awesome hospital icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-right: 10px;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    background-color: #fff;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .08);
+}
+
+.sidebar .nav-link {
+    color: var(--dark-text);
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    padding: 0.85rem 1.2rem;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(0, 114, 181, 0.05);
+    color: var(--primary-blue);
+    border-left: 3px solid var(--primary-blue);
+}
+
+.sidebar .nav-link.active {
+    background-color: rgba(0, 114, 181, 0.1);
+    color: var(--primary-blue);
+    border-left: 3px solid var(--primary-blue);
+    font-weight: 500;
+}
+
+/* Card Styling */
+.card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 1.5rem;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+    border: none;
+    padding: 1rem 1.25rem;
+}
+
+/* Dashboard Cards with Medical Icons */
+.stat-card {
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid var(--primary-blue);
+}
+
+.stat-card .stat-icon {
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    opacity: 0.15;
+}
+
+.stat-card .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.stat-card .stat-label {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+/* Medical Status Indicators */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.status-healthy {
+    background-color: var(--medical-green);
+}
+
+.status-attention {
+    background-color: #ffc107;
+}
+
+.status-critical {
+    background-color: var(--alert-red);
+}
+
+/* Medical Timeline */
+.medical-timeline {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.timeline-item {
+    padding: 10px 40px;
+    position: relative;
+    background-color: inherit;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.timeline-item::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    background-color: #e9ecef;
+    top: 0;
+    bottom: 0;
+    left: 20px;
+    margin-left: -1.5px;
+}
+
+.timeline-icon {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left: 0;
+    background-color: var(--primary-blue);
+    border: 4px solid white;
+    border-radius: 50%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeline-icon i {
+    color: white;
+    font-size: 1rem;
+}
+
+/* Event type color coding */
+.timeline-appointment .timeline-icon {
+    background-color: #9c27b0;
+}
+
+.timeline-diagnosis .timeline-icon {
+    background-color: var(--primary-blue);
+}
+
+.timeline-medication .timeline-icon {
+    background-color: var(--medical-green);
+}
+
+.timeline-procedure .timeline-icon {
+    background-color: #ff9800;
+}
+
+.timeline-lab .timeline-icon {
+    background-color: #607d8b;
+}
+
+/* Medical Records Styling */
+.medical-record-header {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.medical-icon {
+    background: rgba(255, 255, 255, 0.2);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 1.5rem;
+}
+
+/* Vital Sign Styling */
+.vitals-card {
+    border-top: 4px solid var(--primary-blue);
+}
+
+.vital-reading {
+    text-align: center;
+    padding: 10px;
+    border-radius: 0.5rem;
+    background-color: #f8f9fa;
+    height: 100%;
+}
+
+.vital-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+.vital-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+.vital-bp {
+    border-left: 4px solid #ff6384;
+}
+
+.vital-hr {
+    border-left: 4px solid #36a2eb;
+}
+
+.vital-temp {
+    border-left: 4px solid #ff9f40;
+}
+
+.vital-spo2 {
+    border-left: 4px solid #4bc0c0;
+}
+
+/* Prescription Styling */
+.prescription-item {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--medical-green);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.prescription-item h5 {
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Medical Forms */
+.med-form-section {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.med-form-section h4 {
+    color: var(--primary-blue);
+    border-bottom: 2px solid #eaeaea;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Appointment Calendar */
+.fc-event {
+    border-radius: 3px;
+    border: none;
+    padding: 3px;
+    font-size: 0.85rem;
+}
+
+.fc-day-today {
+    background-color: rgba(0, 114, 181, 0.05) !important;
+}
+
+/* Medical Badges */
+.badge-diagnosis {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.badge-medication {
+    background-color: var(--medical-green);
+    color: white;
+}
+
+.badge-procedure {
+    background-color: #ff9800;
+    color: white;
+}
+
+.badge-lab {
+    background-color: #607d8b;
+    color: white;
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .print-header {
+        text-align: center;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    
+    body {
+        font-size: 12pt;
+        color: #000;
+    }
+    
+    .card, .medical-record-header {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+    
+    .medical-record-header {
+        color: #000 !important;
+        background: none !important;
+    }
+    
+    .vital-reading {
+        border: 1px solid #ddd;
+    }
+}
+
+/* Login Page Enhancement */
+.auth-box {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.auth-box .auth-header {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.auth-box .auth-header h3 {
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+.auth-box .auth-body {
+    padding: 30px;
+}
+
+/* Enhanced Form Controls */
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 114, 181, 0.25);
+}
+
+.btn-medical {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+    border: none;
+    color: white;
+    font-weight: 500;
+}
+
+.btn-medical:hover {
+    background: linear-gradient(135deg, #005a91 0%, #008073 100%);
+    color: white;
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .medical-timeline .timeline-item {
+        padding-left: 50px;
+    }
+    
+    .medical-record-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .medical-icon {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
