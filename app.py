@@ -743,5 +743,62 @@ def test_unauthorized():
         cursor.close()
         conn.close()
 
+@app.route('/add_sample_data')
+@login_required(role='Admin')
+def add_sample_data():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Insert sample users
+        cursor.execute("""
+            INSERT INTO Users186 (Username, Password, Role, PersonID)
+            VALUES 
+            ('admin1', 'password1', 'Admin', 1),
+            ('doctor1', 'password2', 'Doctor', 2),
+            ('patient1', 'password3', 'Patient', 3)
+        """)
+        
+        # Insert sample medications
+        cursor.execute("""
+            INSERT INTO Medications186 (Name, Description, DosageForm, Manufacturer, UnitPrice, StockQuantity)
+            VALUES 
+            ('Aspirin', 'Pain reliever', 'Tablet', 'Pharma Inc.', 5.00, 100),
+            ('Ibuprofen', 'Anti-inflammatory', 'Capsule', 'Health Corp.', 8.00, 200)
+        """)
+        
+        # Insert sample doctors
+        cursor.execute("""
+            INSERT INTO Doctors186 (FirstName, LastName, Specialization)
+            VALUES 
+            ('John', 'Doe', 'Cardiology'),
+            ('Jane', 'Smith', 'Neurology')
+        """)
+        
+        # Insert sample patients
+        cursor.execute("""
+            INSERT INTO Patients186 (FirstName, LastName, DateOfBirth, Gender, Address, PhoneNumber, Email, InsuranceDetails, EmergencyContact)
+            VALUES 
+            ('Alice', 'Johnson', '1980-01-01', 'Female', '123 Main St', '123-456-7890', 'alice@example.com', 'Insurance A', 'Bob Johnson'),
+            ('Bob', 'Williams', '1975-05-15', 'Male', '456 Elm St', '987-654-3210', 'bob@example.com', 'Insurance B', 'Alice Williams')
+        """)
+        
+        # Insert sample appointments
+        cursor.execute("""
+            INSERT INTO Appointments186 (PatientID, DoctorID, AppointmentDate, Reason, Status)
+            VALUES 
+            (1, 1, '2023-12-01 10:00:00', 'Routine Checkup', 'Scheduled'),
+            (2, 2, '2023-12-02 11:00:00', 'Consultation', 'Scheduled')
+        """)
+        
+        conn.commit()
+        flash('Sample data added successfully!', 'success')
+    except Exception as e:
+        flash(f'Error: {str(e)}', 'danger')
+    finally:
+        cursor.close()
+        conn.close()
+    return redirect(url_for('dashboard'))
+
 if __name__ == '__main__':
     app.run(debug=True)
